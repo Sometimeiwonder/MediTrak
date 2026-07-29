@@ -3,6 +3,13 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# Node.js
+node_modules/
+UI.zip
+
+# React build
+UI/project/dist/
+
 # User-specific files
 *.rsuser
 *.suo
