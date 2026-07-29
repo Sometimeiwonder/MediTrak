@@ -51,7 +51,7 @@ public class SuppliesController : Controller
         var vm = await _supplyService.GetDetailAsync(id);
         if (vm == null)
         {
-            _logger.LogWarning("Khong tim thay vat tu. SupplyId={SupplyId}", id);
+            _logger.LogWarning("Không tìm thấy vật tư. SupplyId={SupplyId}", id);
             return NotFound();
         }
         return View(vm);
@@ -116,15 +116,15 @@ public class SuppliesController : Controller
 
         if (exists)
         {
-            ModelState.AddModelError(nameof(model.Code), "Ma vat tu nay da ton tai.");
+            ModelState.AddModelError(nameof(model.Code), "Mã vật tư này đã tồn tại.");
             model.Categories = await _supplyService.GetCategoriesAsync();
             return View(model);
         }
 
         var supply = await _supplyService.CreateSupplyAsync(model);
-        _logger.LogInformation("Tao vat tu thanh cong. SupplyId={SupplyId}, Code={Code}", supply.Id, supply.Code);
+        _logger.LogInformation("Tạo vật tư thành công. SupplyId={SupplyId}, Code={Code}", supply.Id, supply.Code);
         await _auditLogService.LogAsync("Create", "MedicalSupply", supply.Id.ToString(), "Success");
-        TempData["SuccessMessage"] = "Da them vat tu thanh cong.";
+        TempData["SuccessMessage"] = "Đã thêm vật tư thành công.";
         return RedirectToAction(nameof(Index));
     }
 
@@ -138,7 +138,7 @@ public class SuppliesController : Controller
 
         if (supply == null)
         {
-            _logger.LogWarning("Khong tim thay vat tu de sua. SupplyId={SupplyId}", id);
+            _logger.LogWarning("Không tìm thấy vật tư để sửa. SupplyId={SupplyId}", id);
             return NotFound();
         }
 
@@ -179,7 +179,7 @@ public class SuppliesController : Controller
 
         if (exists)
         {
-            ModelState.AddModelError(nameof(model.Code), "Ma vat tu nay da ton tai.");
+            ModelState.AddModelError(nameof(model.Code), "Mã vật tư này đã tồn tại.");
             model.Categories = await _supplyService.GetCategoriesAsync();
             return View(model);
         }
@@ -188,13 +188,13 @@ public class SuppliesController : Controller
         if (!result)
         {
             ModelState.AddModelError(string.Empty,
-                "Du lieu da duoc nguoi khac cap nhat. Vui long tai lai trang va thu lai.");
+                "Dữ liệu đã được người khác cập nhật. Vui lòng tải lại trang và thử lại.");
             model.Categories = await _supplyService.GetCategoriesAsync();
             return View(model);
         }
 
         await _auditLogService.LogAsync("Edit", "MedicalSupply", id.ToString(), "Success");
-        TempData["SuccessMessage"] = "Da cap nhat vat tu thanh cong.";
+        TempData["SuccessMessage"] = "Đã cập nhật vật tư thành công.";
         return RedirectToAction(nameof(Index));
     }
 
@@ -209,7 +209,7 @@ public class SuppliesController : Controller
 
         if (supply == null)
         {
-            _logger.LogWarning("Khong tim thay vat tu de xoa. SupplyId={SupplyId}", id);
+            _logger.LogWarning("Không tìm thấy vật tư để xóa. SupplyId={SupplyId}", id);
             return NotFound();
         }
 
@@ -241,7 +241,7 @@ public class SuppliesController : Controller
         }
 
         await _auditLogService.LogAsync("Delete", "MedicalSupply", id.ToString(), "Success");
-        TempData["SuccessMessage"] = "Da xoa mem vat tu thanh cong.";
+        TempData["SuccessMessage"] = "Đã xóa mềm vật tư thành công.";
         return RedirectToAction(nameof(Index));
     }
 
@@ -263,7 +263,7 @@ public class SuppliesController : Controller
         }
 
         await _auditLogService.LogAsync("Restore", "MedicalSupply", id.ToString(), "Success");
-        TempData["SuccessMessage"] = "Da khoi phuc vat tu thanh cong.";
+        TempData["SuccessMessage"] = "Đã khôi phục vật tư thành công.";
         return RedirectToAction(nameof(Trash));
     }
 
@@ -274,7 +274,7 @@ public class SuppliesController : Controller
         var vm = await _supplyService.GetAdjustStockAsync(id);
         if (vm == null)
         {
-            _logger.LogWarning("Khong tim thay vat tu de dieu chinh ton kho. SupplyId={SupplyId}", id);
+            _logger.LogWarning("Không tìm thấy vật tư để điều chỉnh tồn kho. SupplyId={SupplyId}", id);
             return NotFound();
         }
 
@@ -292,7 +292,7 @@ public class SuppliesController : Controller
         if (model.NewQuantity < 0)
         {
             ModelState.AddModelError(nameof(model.Adjustment),
-                "So luong sau dieu chinh khong duoc am.");
+                "Số lượng sau điều chỉnh không được âm.");
             return View(model);
         }
 
@@ -302,13 +302,13 @@ public class SuppliesController : Controller
             await _auditLogService.LogAsync("AdjustStock", "MedicalSupply", id.ToString(), "Failed",
                 $"Concurrency conflict. Adjustment={model.Adjustment}");
             ModelState.AddModelError(string.Empty,
-                "Du lieu da duoc nguoi khac thay doi. Vui long tai lai trang va thu lai.");
+                "Dữ liệu đã được người khác thay đổi. Vui lòng tải lại trang và thử lại.");
             return View(model);
         }
 
         await _auditLogService.LogAsync("AdjustStock", "MedicalSupply", id.ToString(), "Success",
             $"Adjustment={model.Adjustment}, NewQuantity={model.NewQuantity}");
-        TempData["SuccessMessage"] = "Da dieu chinh so luong thanh cong.";
+        TempData["SuccessMessage"] = "Đã điều chỉnh số lượng thành công.";
         return RedirectToAction(nameof(Detail), new { id });
     }
 
@@ -319,7 +319,7 @@ public class SuppliesController : Controller
     {
         if (imageFile == null || imageFile.Length == 0)
         {
-            TempData["ErrorMessage"] = "Vui long chon anh.";
+            TempData["ErrorMessage"] = "Vui lòng chọn ảnh.";
             return RedirectToAction(nameof(Edit), new { id });
         }
 
@@ -342,7 +342,7 @@ public class SuppliesController : Controller
 
             await _auditLogService.LogAsync("ReplaceProductImage", "MedicalSupply", id.ToString(), "Success",
                 $"FileName={imageFile.FileName}");
-            TempData["SuccessMessage"] = "Da tai anh thanh cong.";
+            TempData["SuccessMessage"] = "Đã tải ảnh thành công.";
         }
         catch (InvalidOperationException ex)
         {

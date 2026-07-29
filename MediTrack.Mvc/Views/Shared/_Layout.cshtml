@@ -10,36 +10,36 @@
     <header class="site-header">
         <div class="container header-content">
             <div class="brand">
-                <a asp-controller="Home" asp-action="Index">Medical Supplies</a>
+                <a asp-controller="Home" asp-action="Index">MediTrack</a>
             </div>
             <nav class="main-nav">
                 @if (User.Identity?.IsAuthenticated == true)
                 {
-                    <a asp-controller="Home" asp-action="Index">T?ng quan</a>
-                    <a asp-controller="Supplies" asp-action="Index">V?t t�</a>
+                    <a asp-controller="Home" asp-action="Index">Tổng quan</a>
+                    <a asp-controller="Supplies" asp-action="Index">Vật tư</a>
                     @if (User.IsInRole("Admin"))
                     {
-                        <a asp-controller="Supplies" asp-action="Create">Th�m m?i</a>
+                        <a asp-controller="Supplies" asp-action="Create">Thêm mới</a>
                     }
-                    <a asp-controller="Supplies" asp-action="Trash">Th�ng r�c</a>
-                    <a asp-controller="Supplies" asp-action="Search">T?m ki?m</a>
-                    <a asp-controller="SupplyCategories" asp-action="Index">Danh m?c</a>
+                    <a asp-controller="Supplies" asp-action="Trash">Thùng rác</a>
+                    <a asp-controller="Supplies" asp-action="Search">Tìm kiếm</a>
+                    <a asp-controller="SupplyCategories" asp-action="Index">Danh mục</a>
                     @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
                     {
-                        <a asp-controller="Issues" asp-action="Index">Phi?u xu?t</a>
+                        <a asp-controller="Issues" asp-action="Index">Phiếu xuất</a>
                     }
                     @if (User.IsInRole("Admin"))
                     {
-                        <a asp-controller="AuditLogs" asp-action="Index">Nh?t k?</a>
+                        <a asp-controller="AuditLogs" asp-action="Index">Nhật ký</a>
                     }
-                    <a href="/health/ready">S?c kh?e</a>
+                    <a href="/health/ready">Sức khỏe</a>
                 }
             </nav>
             <div class="user-menu">
                 @if (User.Identity?.IsAuthenticated == true)
                 {
                     <span class="user-info">
-                        Xin ch�o, <strong>@User.Identity.Name</strong>
+                        Xin chào, <strong>@User.Identity.Name</strong>
                         @if (User.IsInRole("Admin"))
                         {
                             <span class="badge badge-admin">Admin</span>
@@ -54,13 +54,13 @@
                         }
                     </span>
                     <form asp-controller="Account" asp-action="Logout" method="post" style="display: inline;">
-                        <button type="submit" class="btn btn-logout">��ng xu?t</button>
+                        <button type="submit" class="btn btn-logout">Đăng xuất</button>
                     </form>
                 }
                 else
                 {
-                    <a asp-controller="Account" asp-action="Login" class="btn btn-login">��ng nh?p</a>
-                    <a asp-controller="Account" asp-action="Register" class="btn btn-register">��ng k?</a>
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-login">Đăng nhập</a>
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-register">Đăng ký</a>
                 }
             </div>
         </div>
@@ -72,8 +72,8 @@
 
     <footer class="site-footer">
         <div class="container footer-content">
-            <span>&copy; 2026 - H? th?ng Qu?n l? V?t t� Y t?</span>
-            <a href="#">Quy?n ri�ng t�</a>
+            <span>&copy; 2026 - Hệ thống Quản lý Vật tư Y tế</span>
+            <a href="#">Quyền riêng tư</a>
         </div>
     </footer>
 

@@ -35,8 +35,8 @@ public class IssueService : IIssueService
         try
         {
             var supply = await _context.MediTrack.FirstOrDefaultAsync(s => s.Id == model.SupplyId);
-            if (supply == null) throw new Exception("Vat tu khong ton tai.");
-            if (supply.Quantity < model.Quantity) throw new Exception("So luong ton kho khong du.");
+            if (supply == null) throw new Exception("Vật tư không tồn tại.");
+            if (supply.Quantity < model.Quantity) throw new Exception("Số lượng tồn kho không đủ.");
 
             var issue = new Issue
             {

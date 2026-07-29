@@ -53,7 +53,7 @@ public class AccountController : Controller
             return Redirect(model.ReturnUrl ?? "/");
         }
 
-        ModelState.AddModelError(string.Empty, "Email hoac mat khau khong dung.");
+        ModelState.AddModelError(string.Empty, "Email hoặc mật khẩu không đúng.");
         await _auditLogService.LogAsync("Login", "User", model.Email, "Failed");
         return View(model);
     }

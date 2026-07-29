@@ -1,23 +1,18 @@
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace MediTrack.Mvc.Migrations
 {
     /// <inheritdoc />
-    public partial class Lab06IdentitySecurityFinal : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "ImageUrl",
-                table: "MediTrack",
-                type: "TEXT",
-                maxLength: 500,
-                nullable: true);
-
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -76,6 +71,34 @@ namespace MediTrack.Mvc.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AuditLogs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Issues",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    IssuedTo = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    IssuedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Issues", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SupplyCategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SupplyCategories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -184,40 +207,87 @@ namespace MediTrack.Mvc.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.UpdateData(
-                table: "MediTrack",
-                keyColumn: "Id",
-                keyValue: 1,
-                column: "ImageUrl",
-                value: null);
+            migrationBuilder.CreateTable(
+                name: "MediTrack",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Code = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
+                    SupplyCategoryId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Supplier = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Quantity = table.Column<int>(type: "INTEGER", nullable: false),
+                    MinStock = table.Column<int>(type: "INTEGER", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    ConcurrencyVersion = table.Column<int>(type: "INTEGER", nullable: false),
+                    ImageUrl = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MediTrack", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MediTrack_SupplyCategories_SupplyCategoryId",
+                        column: x => x.SupplyCategoryId,
+                        principalTable: "SupplyCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
-            migrationBuilder.UpdateData(
-                table: "MediTrack",
-                keyColumn: "Id",
-                keyValue: 2,
-                column: "ImageUrl",
-                value: null);
+            migrationBuilder.CreateTable(
+                name: "IssueItems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    IssueId = table.Column<int>(type: "INTEGER", nullable: false),
+                    MedicalSupplyId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Quantity = table.Column<int>(type: "INTEGER", nullable: false),
+                    UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IssueItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_IssueItems_Issues_IssueId",
+                        column: x => x.IssueId,
+                        principalTable: "Issues",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_IssueItems_MediTrack_MedicalSupplyId",
+                        column: x => x.MedicalSupplyId,
+                        principalTable: "MediTrack",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
-            migrationBuilder.UpdateData(
-                table: "MediTrack",
-                keyColumn: "Id",
-                keyValue: 3,
-                column: "ImageUrl",
-                value: null);
+            migrationBuilder.InsertData(
+                table: "SupplyCategories",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Bảo hộ" },
+                    { 2, "Thiết bị kiểm tra" },
+                    { 3, "Tiêu hao" }
+                });
 
-            migrationBuilder.UpdateData(
+            migrationBuilder.InsertData(
                 table: "MediTrack",
-                keyColumn: "Id",
-                keyValue: 4,
-                column: "ImageUrl",
-                value: null);
-
-            migrationBuilder.UpdateData(
-                table: "MediTrack",
-                keyColumn: "Id",
-                keyValue: 5,
-                column: "ImageUrl",
-                value: null);
+                columns: new[] { "Id", "Code", "ConcurrencyVersion", "CreatedAt", "DeletedAt", "Description", "ImageUrl", "IsDeleted", "MinStock", "Name", "Quantity", "Supplier", "SupplyCategoryId", "UnitPrice", "UpdatedAt" },
+                values: new object[,]
+                {
+                    { 1, "MS-MSK-001", 1, new DateTime(2025, 5, 15, 8, 30, 0, 0, DateTimeKind.Unspecified), null, "Khẩu trang y tế 3 lớp, phù hợp cho phòng khám", null, false, 200, "Khẩu trang y tế", 500, "VinMed", 1, 1200m, null },
+                    { 2, "MS-GLO-002", 1, new DateTime(2025, 5, 15, 9, 0, 0, 0, DateTimeKind.Unspecified), null, "Găng tay y tế không bột, size M/L", null, false, 200, "Găng tay cao su", 180, "VietGlove", 1, 3400m, null },
+                    { 3, "MS-THE-003", 1, new DateTime(2025, 5, 15, 10, 0, 0, 0, DateTimeKind.Unspecified), null, "Nhiệt kế cầm tay đo nhiệt độ không tiếp xúc", null, false, 10, "Nhiệt kế hồng ngoại", 8, "Omron Vietnam", 2, 320000m, null },
+                    { 4, "MS-BAN-004", 1, new DateTime(2025, 5, 15, 9, 30, 0, 0, DateTimeKind.Unspecified), null, "Bông y tế tiêu khuẩn, gói 500g", null, false, 15, "Bông y tế", 0, "Medicare", 3, 28000m, null },
+                    { 5, "MS-SYR-005", 1, new DateTime(2025, 5, 15, 8, 45, 0, 0, DateTimeKind.Unspecified), null, "Bơm tiêm 5ml 1 lần sử dụng", null, false, 100, "Bơm tiêm 5ml", 220, "Kim Tiêm Sài Gòn", 3, 1500m, null }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -270,6 +340,27 @@ namespace MediTrack.Mvc.Migrations
                 name: "IX_AuditLogs_UserName",
                 table: "AuditLogs",
                 column: "UserName");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IssueItems_IssueId",
+                table: "IssueItems",
+                column: "IssueId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IssueItems_MedicalSupplyId",
+                table: "IssueItems",
+                column: "MedicalSupplyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MediTrack_Code",
+                table: "MediTrack",
+                column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MediTrack_SupplyCategoryId",
+                table: "MediTrack",
+                column: "SupplyCategoryId");
         }
 
         /// <inheritdoc />
@@ -294,14 +385,22 @@ namespace MediTrack.Mvc.Migrations
                 name: "AuditLogs");
 
             migrationBuilder.DropTable(
+                name: "IssueItems");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
-            migrationBuilder.DropColumn(
-                name: "ImageUrl",
-                table: "MediTrack");
+            migrationBuilder.DropTable(
+                name: "Issues");
+
+            migrationBuilder.DropTable(
+                name: "MediTrack");
+
+            migrationBuilder.DropTable(
+                name: "SupplyCategories");
         }
     }
 }

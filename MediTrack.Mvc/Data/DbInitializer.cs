@@ -18,9 +18,9 @@ public static class DbInitializer
                 await roleManager.CreateAsync(new IdentityRole(role));
         }
 
-        await CreateUser(userManager, "admin@shop.test", "Admin@123", "Admin", "Quan tri vien");
-        await CreateUser(userManager, "staff@shop.test", "Staff@123", "Staff", "Nhan vien kho");
-        await CreateUser(userManager, "user@shop.test", "User@123", "User", "Nguoi dung demo");
+        await CreateUser(userManager, "admin@shop.test", "Admin@123", "Admin", "Quản trị viên");
+        await CreateUser(userManager, "staff@shop.test", "Staff@123", "Staff", "Nhân viên kho");
+        await CreateUser(userManager, "user@shop.test", "User@123", "User", "Người dùng demo");
     }
 
     private static async Task CreateUser(

@@ -60,7 +60,7 @@ public class IssuesController : Controller
         {
             await _issueService.CreateIssueAsync(model);
             await _auditLogService.LogAsync("Create", "Issue", null, "Success");
-            TempData["SuccessMessage"] = "Tao phieu xuat thanh cong.";
+            TempData["SuccessMessage"] = "Tạo phiếu xuất thành công.";
             return RedirectToAction(nameof(Index));
         }
         catch (Exception ex)
