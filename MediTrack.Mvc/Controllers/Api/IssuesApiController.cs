@@ -49,7 +49,7 @@ public class IssuesController : ControllerBase
         if (!int.TryParse(request.supply_id, out var supplyId))
             return BadRequest("Invalid supply_id");
 
-        var supply = await _db.MedicalSupplies.FindAsync(supplyId);
+        var supply = await _db.MediTrack.FindAsync(supplyId);
         if (supply == null) return NotFound("Supply not found");
 
         if (supply.Quantity < request.quantity)

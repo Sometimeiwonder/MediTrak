@@ -15,7 +15,7 @@ public class SuppliesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var supplies = await _db.MedicalSupplies
+        var supplies = await _db.MediTrack
             .Include(s => s.SupplyCategory)
             .Where(s => !s.IsDeleted)
             .OrderByDescending(s => s.CreatedAt)
@@ -49,7 +49,7 @@ public class SuppliesController : ControllerBase
     {
         if (!int.TryParse(id, out var intId)) return BadRequest();
 
-        var supply = await _db.MedicalSupplies
+        var supply = await _db.MediTrack
             .Include(s => s.SupplyCategory)
             .FirstOrDefaultAsync(s => s.Id == intId && !s.IsDeleted);
 
@@ -94,7 +94,7 @@ public class SuppliesController : ControllerBase
             ConcurrencyVersion = 1
         };
 
-        _db.MedicalSupplies.Add(supply);
+        _db.MediTrack.Add(supply);
         await _db.SaveChangesAsync();
 
         return CreatedAtAction(nameof(GetById), new { id = supply.Id.ToString() }, new { id = supply.Id.ToString() });
@@ -105,7 +105,7 @@ public class SuppliesController : ControllerBase
     {
         if (!int.TryParse(id, out var intId)) return BadRequest();
 
-        var supply = await _db.MedicalSupplies.FindAsync(intId);
+        var supply = await _db.MediTrack.FindAsync(intId);
         if (supply == null) return NotFound();
 
         supply.Name = request.name;
@@ -125,7 +125,7 @@ public class SuppliesController : ControllerBase
     {
         if (!int.TryParse(id, out var intId)) return BadRequest();
 
-        var supply = await _db.MedicalSupplies.FindAsync(intId);
+        var supply = await _db.MediTrack.FindAsync(intId);
         if (supply == null) return NotFound();
 
         supply.IsDeleted = true;
