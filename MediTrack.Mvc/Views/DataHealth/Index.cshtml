@@ -1,0 +1,57 @@
+@model DataHealthViewModel
+@{ ViewData["Title"] = "Kiểm tra sức khỏe dữ liệu"; }
+
+<div class="page-header">
+    <div>
+        <h2 class="page-title">Kiểm tra Sức khỏe Dữ liệu</h2>
+        <p class="page-description">Kiểm tra migration, seed data, tracking/no-tracking.</p>
+    </div>
+    <a class="btn btn-light" asp-controller="Supplies" asp-action="Index">Quay lại</a>
+</div>
+
+<div class="stat-grid">
+    <div class="stat-card">
+        <div class="stat-number">@(Model.DatabaseExists ? "OK" : "FAIL")</div>
+        <div class="stat-label">Kết nối Database</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">@Model.MigrationCount</div>
+        <div class="stat-label">Migration đã áp dụng</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">@Model.TotalCategories</div>
+        <div class="stat-label">Tổng số danh mục</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">@Model.TotalSupplies</div>
+        <div class="stat-label">Tổng số vật tư</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">@Model.TotalIssues</div>
+        <div class="stat-label">Tổng số phiếu xuất</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">@Model.TotalIssueItems</div>
+        <div class="stat-label">Tổng số chi tiết phiếu</div>
+    </div>
+</div>
+
+<div class="info-panel mt-4">
+    <h4>Thông tin Migration</h4>
+    <p>Migration cuối cùng: <strong>@Model.LastMigrationName</strong></p>
+    <p>Tổng số Migration: <strong>@Model.MigrationCount</strong></p>
+</div>
+
+<div class="info-panel mt-4">
+    <h4>Trạng thái Seed Data</h4>
+    @foreach (var status in Model.SeedStatus)
+    {
+        <p>@status</p>
+    }
+</div>
+
+<div class="info-panel mt-4">
+    <h4>Tracking vs No-Tracking Demo</h4>
+    <p>@Model.TrackingDemoResult</p>
+    <p><em>Tracking: Entity được theo dõi bởi DbContext (Entry.State = Unchanged). NoTracking: Entity detached, không bị theo dõi.</em></p>
+</div>

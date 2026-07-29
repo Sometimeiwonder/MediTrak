@@ -1,0 +1,53 @@
+@model List<IssueListItemViewModel>
+@{ ViewData["Title"] = "Lịch sử phiếu xuất"; }
+
+<div class="page-header">
+    <div>
+        <h2 class="page-title">Lịch sử phiếu xuất</h2>
+        <p class="page-description">Danh sách các phiếu xuất vật tư đã thực hiện.</p>
+    </div>
+    <div>
+        <a class="btn" asp-controller="Issues" asp-action="Create">Tạo phiếu xuất mới</a>
+        <a class="btn btn-light" asp-controller="Supplies" asp-action="Index">Quay lại</a>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="success-box">@TempData["SuccessMessage"]</div>
+}
+
+@if (Model.Count == 0)
+{
+    <p>Chưa có phiếu xuất nào.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Mã phiếu</th>
+                <th>Người nhận</th>
+                <th>Ngày xuất</th>
+                <th>Số mặt hàng</th>
+                <th>Tổng giá trị</th>
+                <th>Chi tiết</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.IssuedTo</td>
+                    <td>@item.IssuedAtText</td>
+                    <td>@item.ItemCount</td>
+                    <td>@item.TotalAmountText</td>
+                    <td>
+                        <a asp-controller="Issues" asp-action="Detail" asp-route-id="@item.Id">Xem</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

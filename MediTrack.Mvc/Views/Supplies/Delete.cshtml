@@ -1,0 +1,32 @@
+@model SupplyDeleteViewModel
+@{ ViewData["Title"] = "Xác nhận xóa vật tư"; }
+
+<div class="page-header">
+    <h2 class="page-title">Xác nhận xóa vật tư</h2>
+    <a class="btn btn-light" asp-controller="Supplies" asp-action="Index">Quay lại danh sách</a>
+</div>
+
+<div class="warning-box">
+    <strong>Cảnh báo:</strong> Bạn có chắc chắn muốn xóa mềm vật tư này? Vật tư sẽ được chuyển vào thùng rác và có thể khôi phục sau này.
+</div>
+
+<div class="detail-layout">
+    <div>
+        <table class="table table-bordered">
+            <tr><th>ID</th><td>@Model.Id</td></tr>
+            <tr><th>Mã vật tư</th><td>@Model.Code</td></tr>
+            <tr><th>Tên vật tư</th><td>@Model.Name</td></tr>
+            <tr><th>Nhóm vật tư</th><td>@Model.Category</td></tr>
+            <tr><th>Nhà cung cấp</th><td>@Model.Supplier</td></tr>
+            <tr><th>Đơn giá</th><td>@Model.PriceText</td></tr>
+            <tr><th>Số lượng tồn</th><td>@Model.Quantity</td></tr>
+        </table>
+    </div>
+</div>
+
+<form asp-controller="Supplies" asp-action="Delete" method="post" style="margin-top: 1rem;">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Xóa mềm</button>
+    <a class="btn btn-light" asp-controller="Supplies" asp-action="Index">Hủy</a>
+</form>

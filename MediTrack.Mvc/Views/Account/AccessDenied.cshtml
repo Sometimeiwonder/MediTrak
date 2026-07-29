@@ -1,0 +1,17 @@
+@{
+    ViewData["Title"] = "Truy cập bị từ chối";
+    Layout = "_Layout";
+}
+
+<div class="error-container">
+    <div class="error-card">
+        <div class="error-icon">&#128274;</div>
+        <h2>Truy cập bị từ chối</h2>
+        <p>Bạn không có quyền truy cập trang này.</p>
+        <p>Vui lòng đăng nhập với tài khoản phù hợp hoặc liên hệ quản trị viên.</p>
+        <div class="error-actions">
+            <a asp-controller="Account" asp-action="Login" class="btn btn-primary">Đăng nhập lại</a>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Về trang chủ</a>
+        </div>
+    </div>
+</div>

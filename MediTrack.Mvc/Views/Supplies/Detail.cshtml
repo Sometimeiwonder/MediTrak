@@ -1,0 +1,73 @@
+@model SupplyDetailViewModel
+
+@{
+    ViewData["Title"] = "Chi tiết vật tư";
+}
+
+<div class="page-header">
+    <div>
+        <h2 class="page-title">Chi tiết vật tư y tế</h2>
+        <p class="page-description">Thông tin chi tiết của một vật tư trong kho.</p>
+    </div>
+    <div>
+        <a class="btn btn-light" asp-controller="Supplies" asp-action="Index">Quay lại danh sách</a>
+        @if (User.IsInRole("Admin"))
+        {
+            <a class="btn btn-secondary" asp-controller="Supplies" asp-action="Edit" asp-route-id="@Model.Id">Sửa</a>
+        }
+        @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+        {
+            <a class="btn btn-warning" asp-controller="Supplies" asp-action="AdjustStock" asp-route-id="@Model.Id">Điều chỉnh tồn kho</a>
+        }
+        @if (User.IsInRole("Admin"))
+        {
+            <a class="btn btn-danger" asp-controller="Supplies" asp-action="Delete" asp-route-id="@Model.Id">Xóa</a>
+        }
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.ImageUrl))
+{
+    <div style="margin-bottom: 1rem;">
+        <img src="@Model.ImageUrl" alt="@Model.Name" style="max-width: 300px; max-height: 300px; border-radius: 12px; border: 1px solid #e2e8f0;" />
+    </div>
+}
+
+<div class="detail-layout">
+    <div>
+        <table class="table table-bordered">
+            <tr><th>ID</th><td>@Model.Id</td></tr>
+            <tr><th>Mã vật tư</th><td>@Model.Code</td></tr>
+            <tr><th>Tên vật tư</th><td>@Model.Name</td></tr>
+            <tr><th>Nhóm vật tư</th><td>@Model.Category</td></tr>
+            <tr><th>Nhà cung cấp</th><td>@Model.Supplier</td></tr>
+            <tr><th>Đơn giá</th><td>@Model.PriceText</td></tr>
+            <tr><th>Số lượng tồn kho</th><td>@Model.Quantity</td></tr>
+            <tr><th>Mức tối thiểu</th><td>@Model.MinStock</td></tr>
+            <tr><th>Giá trị tồn kho</th><td>@Model.InventoryValueText</td></tr>
+            <tr><th>Trạng thái</th><td>@Model.StockStatus</td></tr>
+            <tr><th>Gợi ý nhập kho</th><td>@Model.ReorderSuggestion</td></tr>
+            <tr><th>Ngày tạo</th><td>@Model.CreatedAtText</td></tr>
+            <tr><th>Cập nhật lần cuối</th><td>@Model.UpdatedAtText</td></tr>
+        </table>
+    </div>
+    <div>
+        <div class="side-card warning">
+            <h4>Trạng thái tồn kho</h4>
+            <h3>@Model.StockStatus</h3>
+            <p>@Model.ReorderSuggestion</p>
+        </div>
+        <div class="side-card info">
+            <h4>Giá trị tồn kho hiện tại</h4>
+            <h3>@Model.InventoryValueText</h3>
+        </div>
+        <div class="side-card success">
+            <h4>Ngày tạo</h4>
+            <h3>@Model.CreatedAtText</h3>
+        </div>
+        <div class="side-card info">
+            <h4>Cập nhật lần cuối</h4>
+            <h3>@Model.UpdatedAtText</h3>
+        </div>
+    </div>
+</div>

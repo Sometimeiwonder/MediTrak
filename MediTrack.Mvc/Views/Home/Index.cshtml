@@ -1,0 +1,235 @@
+@model SupplyDashboardViewModel
+@{ ViewData["Title"] = "Dashboard"; }
+
+<div class="page-header">
+    <div>
+        <h2 class="page-title">Dashboard</h2>
+        <p class="page-description">Medical inventory management overview.</p>
+    </div>
+</div>
+
+<div class="stat-grid">
+    <div class="stat-card">
+        <div class="stat-number">@Model.TotalSupplies</div>
+        <div class="stat-label">Total Supplies</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number text-success">@Model.ActiveSupplies</div>
+        <div class="stat-label">Active</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number text-danger">@Model.DeletedSupplies</div>
+        <div class="stat-label">Deleted</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">@Model.CreatedToday</div>
+        <div class="stat-label">Created Today</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">@Model.UpdatedToday</div>
+        <div class="stat-label">Updated Today</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number text-warning">@Model.LowStockCount</div>
+        <div class="stat-label">Low Stock</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number text-danger">@Model.OutOfStockCount</div>
+        <div class="stat-label">Out of Stock</div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Stock by Category</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="categoryChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Stock Status</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="stockStatusChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Monthly Activity</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="monthlyChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Recent Activity</h5>
+            </div>
+            <div class="card-body">
+                @if (Model.RecentActivities.Any())
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var activity in Model.RecentActivities)
+                        {
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="badge @(activity.Action == "Deleted" ? "bg-danger" : "bg-primary") me-2">@activity.Action</span>
+                                    @activity.SupplyName
+                                </div>
+                                <small class="text-muted">@activity.Timestamp</small>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">No recent activities.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3 class="mt-4">Security</h3>
+<div class="stat-grid">
+    <div class="stat-card stat-card-warning">
+        <div class="stat-number text-warning">@Model.AccessDeniedToday</div>
+        <div class="stat-label">Access Denied Today</div>
+    </div>
+    <div class="stat-card stat-card-info">
+        <div class="stat-number text-info">@Model.SensitiveActionsToday</div>
+        <div class="stat-label">Sensitive Actions Today</div>
+    </div>
+    <div class="stat-card stat-card-danger">
+        <div class="stat-number text-danger">@Model.RejectedUploadsToday</div>
+        <div class="stat-label">Rejected Uploads Today</div>
+    </div>
+</div>
+
+<div class="info-panel mt-3">
+    @if (Model.OutOfStockCount > 0)
+    {
+        <p class="text-danger">@Model.OutOfStockCount supplies are out of stock. Check inventory immediately.</p>
+    }
+    else if (Model.LowStockCount > 0)
+    {
+        <p class="text-warning">@Model.LowStockCount supplies are running low. Plan restocking.</p>
+    }
+    else
+    {
+        <p class="text-success">Inventory is stable.</p>
+    }
+</div>
+
+<div class="mt-3">
+    <a class="btn" asp-controller="Supplies" asp-action="Index">View Supplies</a>
+    <a class="btn btn-secondary" asp-controller="Supplies" asp-action="Create">Add New Supply</a>
+    <a class="btn btn-outline-primary" asp-controller="Supplies" asp-action="ExportExcel">Export Excel</a>
+    <a class="btn btn-outline-secondary" asp-controller="Supplies" asp-action="ExportCsv">Export CSV</a>
+    <a class="btn btn-light" asp-controller="Supplies" asp-action="Trash">Trash</a>
+    @if (User.IsInRole("Admin"))
+    {
+        <a class="btn btn-light" asp-controller="AuditLogs" asp-action="Index">Audit Logs</a>
+    }
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Category Stock Bar Chart
+        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+        new Chart(categoryCtx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.CategoryStockData.Select(x => x.CategoryName))),
+                datasets: [{
+                    label: 'Total Quantity',
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.CategoryStockData.Select(x => x.TotalQuantity))),
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(75, 192, 192, 0.8)',
+                        'rgba(255, 205, 86, 0.8)',
+                        'rgba(153, 102, 255, 0.8)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // Stock Status Doughnut Chart
+        const statusCtx = document.getElementById('stockStatusChart').getContext('2d');
+        new Chart(statusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.StockStatusData.Select(x => x.Status))),
+                datasets: [{
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.StockStatusData.Select(x => x.Count))),
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.8)',
+                        'rgba(255, 205, 86, 0.8)',
+                        'rgba(255, 99, 132, 0.8)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+
+        // Monthly Activity Line Chart
+        const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+        new Chart(monthlyCtx, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyActivityData.Select(x => x.Month))),
+                datasets: [
+                    {
+                        label: 'Created',
+                        data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyActivityData.Select(x => x.Created))),
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        fill: true,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Updated',
+                        data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyActivityData.Select(x => x.Updated))),
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        fill: true,
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'top' } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+    </script>
+}

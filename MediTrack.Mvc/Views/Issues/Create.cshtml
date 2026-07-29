@@ -1,0 +1,50 @@
+@model IssueCreateViewModel
+@{ ViewData["Title"] = "Tạo phiếu xuất"; }
+
+<div class="page-header">
+    <h2 class="page-title">Tạo phiếu xuất vật tư</h2>
+    <a class="btn btn-light" asp-controller="Issues" asp-action="Index">Quay lại danh sách</a>
+</div>
+
+<div asp-validation-summary="All" class="error-box" style="@(ViewData.ModelState.ErrorCount > 0 ? "" : "display:none")"></div>
+
+<div class="form-layout">
+    <form class="form-box" asp-controller="Issues" asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            <label asp-for="IssuedTo">Người nhận</label>
+            <input asp-for="IssuedTo" class="form-control" placeholder="VD: Phòng khám A" />
+            <span asp-validation-for="IssuedTo" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="SupplyId">Vật tư</label>
+            <select asp-for="SupplyId" class="form-control">
+                <option value="">-- Chọn vật tư --</option>
+                @foreach (var s in Model.AvailableSupplies)
+                {
+                    <option value="@s.Id">@s.Name (Tồn: @s.Quantity, Giá: @s.UnitPrice.ToString("N0") đ)</option>
+                }
+            </select>
+            <span asp-validation-for="SupplyId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Quantity">Số lượng xuất</label>
+            <input asp-for="Quantity" type="number" class="form-control" min="1" />
+            <span asp-validation-for="Quantity" class="text-danger"></span>
+        </div>
+
+        <button class="btn" type="submit">Xuất vật tư</button>
+    </form>
+
+    <div class="info-box">
+        <h3>Lưu ý - Transaction</h3>
+        <p>Thao tác này sử dụng transaction: tạo Order, tạo OrderItem, trừ Stock. Nếu một bước bị lỗi, toàn bộ sẽ rollback.</p>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

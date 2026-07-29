@@ -1,0 +1,7 @@
+@{ ViewData["Title"] = "Lỗi"; }
+
+<div class="text-center" style="margin-top: 50px;">
+    <h1 class="display-4 text-danger">Lỗi @ViewData["StatusCode"]</h1>
+    <p>Có lỗi xảy ra khi xử lý yêu cầu của bạn.</p>
+    <a class="btn" asp-controller="Home" asp-action="Index">Quay lại trang chủ</a>
+</div>

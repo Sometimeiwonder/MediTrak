@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="MediTrack.Mvc\MediTrack.Mvc.csproj" />
+  <Project Path="MediTrack.Tests\MediTrack.Tests.csproj" />
+</Solution>

@@ -1,0 +1,39 @@
+@model List<SupplyCategoryViewModel>
+@{ ViewData["Title"] = "Danh mục vật tư"; }
+
+<div class="page-header">
+    <div>
+        <h2 class="page-title">Danh mục vật tư</h2>
+        <p class="page-description">Quan hệ One-to-Many: một Category có nhiều Product.</p>
+    </div>
+    <a class="btn btn-light" asp-controller="Supplies" asp-action="Index">Quay lại danh sách</a>
+</div>
+
+@if (Model.Count == 0)
+{
+    <p>Chưa có danh mục nào.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên danh mục</th>
+                <th>Số lượng vật tư</th>
+                <th>Giá trị tồn kho</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cat in Model)
+            {
+                <tr>
+                    <td>@cat.Id</td>
+                    <td>@cat.Name</td>
+                    <td>@cat.SupplyCount</td>
+                    <td>@cat.TotalInventoryValueText</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
