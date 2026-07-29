@@ -1,9 +1,10 @@
 # MediTrack - Medical Inventory Management System
 
-A comprehensive medical supply inventory management system built with ASP.NET Core MVC, featuring role-based authorization, real-time dashboard with charts, export capabilities, and audit logging.
+A comprehensive medical supply inventory management system with **two frontend options**: ASP.NET Core MVC (server-rendered) and React + Tailwind CSS (SPA with Supabase).
 
 ![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-10.0-purple)
-![Entity Framework](https://img.shields.io/badge/EF_Core-10.0-blue)
+![React](https://img.shields.io/badge/React-18-blue)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-teal)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 ## Features
@@ -33,22 +34,44 @@ A comprehensive medical supply inventory management system built with ASP.NET Co
 
 ## Tech Stack
 
+### Backend (ASP.NET MVC)
 | Technology | Purpose |
 |------------|---------|
 | ASP.NET Core 10.0 | Web framework |
 | Entity Framework Core | ORM with SQLite |
 | ASP.NET Core Identity | Authentication & Authorization |
 | Serilog | Structured logging |
-| Chart.js | Dashboard visualizations |
 | EPPlus | Excel export |
+
+### Frontend Options
+
+**Option 1: ASP.NET MVC (Server-rendered)**
+| Technology | Purpose |
+|------------|---------|
+| Razor Views | Server-side rendering |
 | Bootstrap 5 | UI framework |
+| Chart.js | Dashboard visualizations |
+
+**Option 2: React SPA (with Supabase)**
+| Technology | Purpose |
+|------------|---------|
+| React 18 | UI library |
+| Tailwind CSS | Utility-first CSS |
+| Supabase | Backend-as-a-Service |
+| Recharts | Chart library |
+| Vite | Build tool |
+
+### Infrastructure
+| Technology | Purpose |
+|------------|---------|
 | Docker | Containerization |
+| Supabase | PostgreSQL database (React version) |
 
 ## Project Structure
 
 ```
 MediTrack/
-├── MediTrack.Mvc/           # Main application
+├── MediTrack.Mvc/           # ASP.NET MVC application
 │   ├── Controllers/         # MVC Controllers
 │   ├── Data/                # DbContext, Migrations, Seeds
 │   ├── Filters/             # Authorization filters
@@ -59,6 +82,12 @@ MediTrack/
 │   ├── ViewModels/          # View models
 │   ├── Views/               # Razor views
 │   └── wwwroot/             # Static files
+├── UI/project/              # React SPA (Supabase backend)
+│   ├── src/
+│   │   ├── components/      # React components
+│   │   ├── pages/           # Page components
+│   │   └── lib/             # Utilities & Supabase client
+│   └── supabase/            # Database migrations
 ├── MediTrack.Tests/         # Unit tests (xUnit)
 ├── Dockerfile               # Docker configuration
 └── docker-compose.yml       # Docker Compose configuration
@@ -68,10 +97,11 @@ MediTrack/
 
 ### Prerequisites
 
-- [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) (for MVC version)
+- [Node.js 18+](https://nodejs.org/) (for React version)
 - Docker (optional)
 
-### Installation
+### Option 1: ASP.NET MVC Version
 
 1. **Clone the repository**
    ```bash
@@ -79,22 +109,38 @@ MediTrack/
    cd MediTrak
    ```
 
-2. **Restore packages**
-   ```bash
-   dotnet restore
-   ```
-
-3. **Run the application**
+2. **Restore packages and run**
    ```bash
    cd MediTrack.Mvc
+   dotnet restore
    dotnet run
    ```
 
-4. **Open in browser**
+3. **Open in browser**
    - HTTPS: https://localhost:7226
    - HTTP: http://localhost:5226
 
-### Docker
+### Option 2: React SPA Version
+
+1. **Navigate to UI folder**
+   ```bash
+   cd UI/project
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Run development server**
+   ```bash
+   npm run dev
+   ```
+
+4. **Open in browser**
+   - http://localhost:5173
+
+### Docker (MVC Version)
 
 ```bash
 docker-compose up --build
