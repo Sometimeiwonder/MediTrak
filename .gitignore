@@ -10,6 +10,9 @@ UI.zip
 # React build
 UI/project/dist/
 
+# Built SPA in wwwroot (generated from UI/project build)
+MediTrack.Mvc/wwwroot/spa/
+
 # User-specific files
 *.rsuser
 *.suo

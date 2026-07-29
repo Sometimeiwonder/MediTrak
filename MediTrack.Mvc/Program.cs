@@ -17,7 +17,7 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
     .WriteTo.Console()
     .WriteTo.File("logs/lab05-.txt", rollingInterval: RollingInterval.Day));
 
-builder.Services.AddControllersWithViews(options =>
+builder.Services.AddControllers(options =>
 {
     options.Filters.Add<MediTrack.Mvc.Filters.AuditAccessDeniedFilter>();
 });
@@ -104,9 +104,10 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllers();
+
+// SPA fallback - serve index.html for all non-API routes
+app.MapFallbackToFile("index.html");
 
 app.MapHealthChecks("/health/live", new HealthCheckOptions
 {

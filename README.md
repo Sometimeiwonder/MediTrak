@@ -1,107 +1,79 @@
 # MediTrack - Medical Inventory Management System
 
-A comprehensive medical supply inventory management system with **two frontend options**: ASP.NET Core MVC (server-rendered) and React + Tailwind CSS (SPA with Supabase).
+A full-stack medical supply inventory management system with **React + Tailwind CSS** frontend and **ASP.NET Core** backend API.
 
 ![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-10.0-purple)
 ![React](https://img.shields.io/badge/React-18-blue)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-teal)
+![SQLite](https://img.shields.io/badge/SQLite-3-green)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 ## Features
 
-### Core Functionality
-- **Dashboard** - Real-time overview with Chart.js visualizations (bar, doughnut, line charts)
-- **CRUD Operations** - Full Create, Read, Update, Delete with validation
-- **Soft Delete** - Trash and Restore functionality
-- **Concurrency Control** - RowVersion conflict detection
-- **Transaction Management** - Issue creation with stock deduction
-- **Search** - LINQ-based search with keyword filter
-- **Pagination** - Server-side paging for large datasets
+### Dashboard
+- Real-time overview with Recharts (Bar, Pie, Line charts)
+- Total supplies, low stock alerts, out of stock items
+- Stock by category visualization
+- Issues trend over last 7 days
+- Recent issues table
 
-### Export Capabilities
-- **Excel Export** - Export to .xlsx format using EPPlus library
-- **CSV Export** - Export to .csv format
+### Supply Management
+- Full CRUD operations
+- Search by name or SKU
+- Category filtering
+- Stock status badges (In Stock, Low Stock, Out of Stock)
 
-### Security Features
-- **Role-based Authorization** - Admin, Staff, User roles with 5 policies
-- **Audit Logging** - Track all CRUD operations
-- **File Upload Security** - Whitelist validation, GUID naming, 2MB limit
-- **Health Checks** - `/health/live` and `/health/ready` endpoints
+### Issue Tracking
+- Create supply issuances
+- Automatic stock deduction
+- Track who received supplies
 
-### API
-- **RESTful Endpoints** - Get supply by ID, search with filters
-- **ProblemDetails** - Structured error responses with traceId
+### Categories
+- Manage supply categories
+
+### Audit Logs
+- Track all system activities
 
 ## Tech Stack
 
-### Backend (ASP.NET MVC)
 | Technology | Purpose |
 |------------|---------|
-| ASP.NET Core 10.0 | Web framework |
-| Entity Framework Core | ORM with SQLite |
-| ASP.NET Core Identity | Authentication & Authorization |
-| Serilog | Structured logging |
-| EPPlus | Excel export |
-
-### Frontend Options
-
-**Option 1: ASP.NET MVC (Server-rendered)**
-| Technology | Purpose |
-|------------|---------|
-| Razor Views | Server-side rendering |
-| Bootstrap 5 | UI framework |
-| Chart.js | Dashboard visualizations |
-
-**Option 2: React SPA (with Supabase)**
-| Technology | Purpose |
-|------------|---------|
-| React 18 | UI library |
-| Tailwind CSS | Utility-first CSS |
-| Supabase | Backend-as-a-Service |
-| Recharts | Chart library |
+| React 18 | Frontend UI |
+| Tailwind CSS | Utility-first styling |
+| Recharts | Dashboard charts |
 | Vite | Build tool |
-
-### Infrastructure
-| Technology | Purpose |
-|------------|---------|
-| Docker | Containerization |
-| Supabase | PostgreSQL database (React version) |
+| ASP.NET Core 10.0 | Backend API |
+| Entity Framework Core | ORM |
+| SQLite | Database |
 
 ## Project Structure
 
 ```
 MediTrack/
-├── MediTrack.Mvc/           # ASP.NET MVC application
-│   ├── Controllers/         # MVC Controllers
-│   ├── Data/                # DbContext, Migrations, Seeds
-│   ├── Filters/             # Authorization filters
+├── MediTrack.Mvc/
+│   ├── Controllers/Api/     # REST API endpoints
+│   ├── Data/                # DbContext & Migrations
 │   ├── Models/              # Domain entities
-│   ├── Options/             # Configuration options
-│   ├── Repositories/        # Data access layer
-│   ├── Services/            # Business logic layer
-│   ├── ViewModels/          # View models
-│   ├── Views/               # Razor views
-│   └── wwwroot/             # Static files
-├── UI/project/              # React SPA (Supabase backend)
+│   ├── wwwroot/spa/         # Built React app (generated)
+│   └── Program.cs           # API configuration
+├── UI/project/              # React source code
 │   ├── src/
-│   │   ├── components/      # React components
+│   │   ├── components/      # UI components
 │   │   ├── pages/           # Page components
-│   │   └── lib/             # Utilities & Supabase client
-│   └── supabase/            # Database migrations
-├── MediTrack.Tests/         # Unit tests (xUnit)
-├── Dockerfile               # Docker configuration
-└── docker-compose.yml       # Docker Compose configuration
+│   │   └── lib/             # API client
+│   └── package.json
+├── build-spa.ps1            # Build script (PowerShell)
+└── build-spa.bat            # Build script (Batch)
 ```
 
 ## Getting Started
 
 ### Prerequisites
 
-- [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) (for MVC version)
-- [Node.js 18+](https://nodejs.org/) (for React version)
-- Docker (optional)
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
+- [Node.js 18+](https://nodejs.org/)
 
-### Option 1: ASP.NET MVC Version
+### Setup
 
 1. **Clone the repository**
    ```bash
@@ -109,76 +81,58 @@ MediTrack/
    cd MediTrak
    ```
 
-2. **Restore packages and run**
+2. **Build the React UI**
+   ```powershell
+   # PowerShell
+   .\build-spa.ps1
+   
+   # Or manually
+   cd UI/project
+   npm install
+   npm run build
+   # Copy dist/* to MediTrack.Mvc/wwwroot/spa/
+   ```
+
+3. **Run the application**
    ```bash
    cd MediTrack.Mvc
-   dotnet restore
    dotnet run
    ```
 
-3. **Open in browser**
-   - HTTPS: https://localhost:7226
-   - HTTP: http://localhost:5226
-
-### Option 2: React SPA Version
-
-1. **Navigate to UI folder**
-   ```bash
-   cd UI/project
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Run development server**
-   ```bash
-   npm run dev
-   ```
-
 4. **Open in browser**
-   - http://localhost:5173
-
-### Docker (MVC Version)
-
-```bash
-docker-compose up --build
-```
-
-## Demo Accounts
-
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | admin@shop.test | Admin@123 |
-| Staff | staff@shop.test | Staff@123 |
-| User | user@shop.test | User@123 |
+   - https://localhost:7226
+   - http://localhost:5226
 
 ## API Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/supplies/{id}` | Get supply by ID |
-| GET | `/api/supplies/search?keyword=...` | Search supplies |
-| GET | `/health/live` | Liveness check |
-| GET | `/health/ready` | Readiness check (DB) |
+| GET | `/api/v1/supplies` | List all supplies |
+| GET | `/api/v1/supplies/{id}` | Get supply by ID |
+| POST | `/api/v1/supplies` | Create supply |
+| PUT | `/api/v1/supplies/{id}` | Update supply |
+| DELETE | `/api/v1/supplies/{id}` | Delete supply |
+| GET | `/api/v1/categories` | List categories |
+| POST | `/api/v1/categories` | Create category |
+| GET | `/api/v1/issues` | List issues |
+| POST | `/api/v1/issues` | Create issue |
+| GET | `/api/v1/auditlogs` | List audit logs |
 
-## Authorization Policies
+## Development
 
-| Policy | Access |
-|--------|--------|
-| CanViewSupply | Admin, Staff |
-| CanManageSupply | Admin only |
-| CanAdjustStock | Admin, Staff |
-| CanViewAuditLog | Admin only |
-| CanManageIssue | Admin, Staff |
-
-## Testing
-
+### Backend (ASP.NET)
 ```bash
-dotnet test
+cd MediTrack.Mvc
+dotnet watch run
 ```
+
+### Frontend (React with hot reload)
+```bash
+cd UI/project
+npm run dev
+```
+The dev server runs on http://localhost:5173 with API proxy to the backend.
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
+MIT License
