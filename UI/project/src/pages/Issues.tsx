@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Plus } from 'lucide-react'
 import { api, type Issue, type Supply } from '../lib/supabase'
 import { PageHeader, Spinner, Modal, EmptyState } from '../components/ui'
+import { ArrowDownToLine } from 'lucide-react'
 
 export default function Issues() {
   const [issues, setIssues] = useState<Issue[]>([])
@@ -37,7 +38,7 @@ export default function Issues() {
       </PageHeader>
 
       {issues.length === 0 ? (
-        <EmptyState message="No issues recorded" />
+        <EmptyState icon={ArrowDownToLine} title="No issues" message="No issues recorded" />
       ) : (
         <div className="card overflow-hidden">
           <div className="overflow-x-auto">

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Plus, Pencil, Trash2, Search } from 'lucide-react'
 import { api, type Supply, type SupplyCategory } from '../lib/supabase'
 import { PageHeader, Badge, Spinner, stockStatus, Modal, EmptyState } from '../components/ui'
+import { Package } from 'lucide-react'
 
 export default function Supplies() {
   const [supplies, setSupplies] = useState<Supply[]>([])
@@ -63,7 +64,7 @@ export default function Supplies() {
       </div>
 
       {filtered.length === 0 ? (
-        <EmptyState message="No supplies found" />
+        <EmptyState icon={Package} title="No supplies" message="No supplies found" />
       ) : (
         <div className="card overflow-hidden">
           <div className="overflow-x-auto">

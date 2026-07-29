@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react'
 import { api, type AuditLog } from '../lib/supabase'
 import { PageHeader, Spinner, Badge, EmptyState } from '../components/ui'
+import { ClipboardList } from 'lucide-react'
 
-const actionColors: Record<string, string> = {
-  CREATE: 'success',
-  INSERT: 'success',
+const actionColors: Record<string, 'primary' | 'accent' | 'warning' | 'danger'> = {
+  CREATE: 'accent',
+  INSERT: 'accent',
   UPDATE: 'warning',
   DELETE: 'danger',
   LOGIN: 'primary',
-  ISSUE: 'accent',
+  ISSUE: 'primary',
 }
 
 export default function AuditLogs() {
@@ -35,7 +36,7 @@ export default function AuditLogs() {
       <PageHeader title="Audit Logs" subtitle="System activity trail" />
 
       {logs.length === 0 ? (
-        <EmptyState message="No audit logs" />
+        <EmptyState icon={ClipboardList} title="No logs" message="No audit logs" />
       ) : (
         <div className="card overflow-hidden">
           <div className="overflow-x-auto">

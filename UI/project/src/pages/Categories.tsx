@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Plus } from 'lucide-react'
 import { api, type SupplyCategory } from '../lib/supabase'
 import { PageHeader, Spinner, Modal, EmptyState } from '../components/ui'
+import { FolderOpen } from 'lucide-react'
 
 export default function Categories() {
   const [categories, setCategories] = useState<SupplyCategory[]>([])
@@ -31,7 +32,7 @@ export default function Categories() {
       </PageHeader>
 
       {categories.length === 0 ? (
-        <EmptyState message="No categories yet" />
+        <EmptyState icon={FolderOpen} title="No categories" message="No categories yet" />
       ) : (
         <div className="card overflow-hidden">
           <div className="overflow-x-auto">
