@@ -33,6 +33,7 @@ a:hover {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 20px;
 }
 
 .brand a {
@@ -40,20 +41,30 @@ a:hover {
     font-size: 22px;
     font-weight: bold;
     text-decoration: none;
+    white-space: nowrap;
 }
 
 .main-nav {
     display: flex;
-    gap: 20px;
+    gap: 16px;
+    flex-wrap: wrap;
+    flex: 1;
+    justify-content: center;
 }
 
 .main-nav a {
     color: #e5e7eb;
     text-decoration: none;
+    white-space: nowrap;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: background 0.2s;
 }
 
 .main-nav a:hover {
     color: white;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .main-content {
@@ -306,18 +317,20 @@ a:hover {
     display: flex;
     align-items: center;
     gap: 12px;
+    white-space: nowrap;
 }
 
 .user-info {
     color: #e5e7eb;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .btn-login {
     background: transparent;
     color: #e5e7eb;
     border: 1px solid #e5e7eb;
-    padding: 8px 16px;
+    padding: 6px 12px;
+    font-size: 13px;
 }
 
 .btn-login:hover {
@@ -328,15 +341,16 @@ a:hover {
 .btn-register {
     background: #2563eb;
     color: white;
-    padding: 8px 16px;
+    padding: 6px 12px;
+    font-size: 13px;
 }
 
 .btn-logout {
     background: transparent;
     color: #f87171;
     border: 1px solid #f87171;
-    padding: 8px 16px;
-    font-size: 14px;
+    padding: 6px 12px;
+    font-size: 13px;
 }
 
 .btn-logout:hover {
