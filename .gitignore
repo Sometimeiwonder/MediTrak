@@ -17,6 +17,9 @@ MediTrack.Mvc/wwwroot/spa/
 *.db-shm
 *.db-wal
 
+# TypeScript build info
+*.tsbuildinfo
+
 # User-specific files
 *.rsuser
 *.suo

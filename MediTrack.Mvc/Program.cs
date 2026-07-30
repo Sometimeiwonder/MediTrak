@@ -109,6 +109,83 @@ app.MapControllers();
 // SPA fallback - serve index.html for all non-API routes
 app.MapFallbackToFile("index.html");
 
+app.MapGet("/api/v1/dashboard", async (AppDbContext db) =>
+{
+    var supplies = await db.MediTrack.Where(s => !s.IsDeleted).ToListAsync();
+    var issues = await db.Issues.Include(i => i.IssueItems).ToListAsync();
+    var auditLogs = await db.AuditLogs.ToListAsync();
+
+    var now = DateTime.Now;
+    var today = now.Date;
+    var weekAgo = today.AddDays(-7);
+    var monthAgo = today.AddMonths(-1);
+
+    var lowStock = supplies.Where(s => s.Quantity > 0 && s.Quantity <= s.MinStock).Count();
+    var outOfStock = supplies.Where(s => s.Quantity <= 0).Count();
+
+    var createdToday = supplies.Count(s => s.CreatedAt.Date == today);
+    var updatedToday = supplies.Count(s => s.UpdatedAt?.Date == today);
+    var accessDeniedToday = auditLogs.Count(l => l.Action == "ACCESS_DENIED" && l.CreatedAt.Date == today);
+    var sensitiveToday = auditLogs.Count(l => l.Action == "SENSITIVE_ACTION" && l.CreatedAt.Date == today);
+    var rejectedUploadsToday = auditLogs.Count(l => l.Action == "UPLOAD_REJECTED" && l.CreatedAt.Date == today);
+
+    var monthlyActivity = Enumerable.Range(0, 6).Select(i =>
+    {
+        var month = now.AddMonths(-5 + i);
+        return new
+        {
+            month = month.ToString("MMM yyyy"),
+            created = supplies.Count(s => s.CreatedAt.Month == month.Month && s.CreatedAt.Year == month.Year),
+            updated = supplies.Count(s => s.UpdatedAt?.Month == month.Month && s.UpdatedAt?.Year == month.Year)
+        };
+    }).ToList();
+
+    var stockStatus = new
+    {
+        inStock = supplies.Count(s => s.Quantity > s.MinStock),
+        lowStock,
+        outOfStock
+    };
+
+    var issueTrend = Enumerable.Range(0, 7).Select(i =>
+    {
+        var day = today.AddDays(-6 + i);
+        return new
+        {
+            day = day.ToString("ddd"),
+            count = issues.Count(iss => iss.IssuedAt.Date == day)
+        };
+    }).ToList();
+
+    var categoryStock = supplies
+        .GroupBy(s => s.SupplyCategoryId)
+        .Select(g => new
+        {
+            category = g.First().SupplyCategory?.Name ?? "Unknown",
+            totalQuantity = g.Sum(s => s.Quantity),
+            totalValue = g.Sum(s => s.Quantity * (double)s.UnitPrice)
+        })
+        .ToList();
+
+    return Results.Ok(new
+    {
+        totalSupplies = supplies.Count,
+        totalUnits = supplies.Sum(s => s.Quantity),
+        lowStock,
+        outOfStock,
+        createdToday,
+        updatedToday,
+        accessDeniedToday,
+        sensitiveToday,
+        rejectedUploadsToday,
+        totalIssues = issues.Count,
+        monthlyActivity,
+        stockStatus,
+        issueTrend,
+        categoryStock
+    });
+});
+
 app.MapHealthChecks("/health/live", new HealthCheckOptions
 {
     Predicate = check => check.Tags.Contains("live")

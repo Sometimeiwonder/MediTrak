@@ -1,4 +1,5 @@
 using MediTrack.Mvc.Data;
+using MediTrack.Mvc.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,7 +22,10 @@ public class CategoriesController : ControllerBase
             {
                 id = c.Id.ToString(),
                 name = c.Name,
-                description = (string?)null,
+                supply_count = c.Supplies.Count(s => !s.IsDeleted),
+                total_inventory_value = c.Supplies
+                    .Where(s => !s.IsDeleted)
+                    .Sum(s => s.Quantity * (double)s.UnitPrice),
                 created_at = DateTime.UtcNow.ToString("o")
             })
             .ToListAsync();
@@ -32,11 +36,34 @@ public class CategoriesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateCategoryRequest request)
     {
-        var category = new Models.SupplyCategory { Name = request.name };
+        if (string.IsNullOrWhiteSpace(request.name))
+            return BadRequest(new { error = "Name is required" });
+
+        var category = new SupplyCategory { Name = request.name };
         _db.SupplyCategories.Add(category);
         await _db.SaveChangesAsync();
 
         return CreatedAtAction(nameof(GetAll), new { id = category.Id.ToString() }, new { id = category.Id.ToString() });
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(string id)
+    {
+        if (!int.TryParse(id, out var intId)) return BadRequest();
+
+        var category = await _db.SupplyCategories
+            .Include(c => c.Supplies)
+            .FirstOrDefaultAsync(c => c.Id == intId);
+
+        if (category == null) return NotFound();
+
+        if (category.Supplies.Any(s => !s.IsDeleted))
+            return BadRequest(new { error = "Cannot delete category with active supplies" });
+
+        _db.SupplyCategories.Remove(category);
+        await _db.SaveChangesAsync();
+
+        return NoContent();
     }
 }
 

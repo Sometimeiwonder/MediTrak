@@ -6,6 +6,7 @@ import {
   ShieldCheck,
   FolderTree,
   HeartPulse,
+  Trash2,
 } from 'lucide-react'
 
 const navItems = [
@@ -14,6 +15,7 @@ const navItems = [
   { to: '/issues', label: 'Issues', icon: ArrowDownToLine },
   { to: '/categories', label: 'Categories', icon: FolderTree },
   { to: '/audit-logs', label: 'Audit Logs', icon: ShieldCheck },
+  { to: '/trash', label: 'Trash', icon: Trash2 },
 ]
 
 export default function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -60,18 +62,6 @@ export default function Sidebar({ open, onClose }: { open: boolean; onClose: () 
             </NavLink>
           ))}
         </nav>
-
-        <div className="border-t border-slate-200 p-4">
-          <div className="flex items-center gap-3 rounded-lg bg-slate-50 p-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-600 text-sm font-semibold text-white">
-              AD
-            </div>
-            <div className="min-w-0">
-              <p className="truncate text-sm font-medium text-slate-900">Admin User</p>
-              <p className="truncate text-xs text-slate-400">admin@meditrak.test</p>
-            </div>
-          </div>
-        </div>
       </aside>
     </>
   )
