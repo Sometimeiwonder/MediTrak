@@ -13,6 +13,10 @@ UI/project/dist/
 # Built SPA in wwwroot (generated from UI/project build)
 MediTrack.Mvc/wwwroot/spa/
 
+# SQLite journal files
+*.db-shm
+*.db-wal
+
 # User-specific files
 *.rsuser
 *.suo

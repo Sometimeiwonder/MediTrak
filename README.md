@@ -54,7 +54,10 @@ MediTrack/
 │   ├── Controllers/Api/     # REST API endpoints
 │   ├── Data/                # DbContext & Migrations
 │   ├── Models/              # Domain entities
-│   ├── wwwroot/spa/         # Built React app (generated)
+│   ├── wwwroot/             # Static files & built React app
+│   │   ├── index.html       # SPA entry point
+│   │   ├── assets/          # JS & CSS bundles
+│   │   └── favicon.svg
 │   └── Program.cs           # API configuration
 ├── UI/project/              # React source code
 │   ├── src/
@@ -62,8 +65,7 @@ MediTrack/
 │   │   ├── pages/           # Page components
 │   │   └── lib/             # API client
 │   └── package.json
-├── build-spa.ps1            # Build script (PowerShell)
-└── build-spa.bat            # Build script (Batch)
+└── build-spa.ps1            # Build script
 ```
 
 ## Getting Started
@@ -90,7 +92,7 @@ MediTrack/
    cd UI/project
    npm install
    npm run build
-   # Copy dist/* to MediTrack.Mvc/wwwroot/spa/
+   # Copy dist/* to MediTrack.Mvc/wwwroot/
    ```
 
 3. **Run the application**
@@ -117,6 +119,16 @@ MediTrack/
 | GET | `/api/v1/issues` | List issues |
 | POST | `/api/v1/issues` | Create issue |
 | GET | `/api/v1/auditlogs` | List audit logs |
+| GET | `/health/live` | Health liveness check |
+| GET | `/health/ready` | Health readiness check |
+
+## Default Accounts
+
+| Email | Password | Role |
+|-------|----------|------|
+| admin@shop.test | Admin@123 | Admin |
+| staff@shop.test | Staff@123 | Staff |
+| user@shop.test | User@123 | User |
 
 ## Development
 
