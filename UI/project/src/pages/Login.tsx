@@ -167,6 +167,7 @@ export default function Login({ onLogin }: { onLogin: (user: AuthUser) => void }
               <p className="font-medium text-slate-600">Demo accounts:</p>
               <p>Admin: admin@shop.test / Admin@123</p>
               <p>Staff: staff@shop.test / Staff@123</p>
+              <p>User: user@shop.test / User@123</p>
             </div>
           )}
         </div>

@@ -54,6 +54,7 @@ public class AuthController : ControllerBase
         var roles = await _userManager.GetRolesAsync(user);
         return Ok(new
         {
+            authenticated = true,
             id = user.Id,
             email = user.Email,
             fullName = user.FullName,
